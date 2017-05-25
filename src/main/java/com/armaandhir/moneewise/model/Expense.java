@@ -25,13 +25,13 @@ public class Expense implements Serializable {
 
 	@Id
 	@GeneratedValue
-	@Column(name="id")
+	@Column(name="id", nullable=false)
 	private Long id;
 	
 	@Column(name="stormpath_email")
 	private String stormpathEmail;
 	
-	@Column(name="created_at")
+	@Column(name="created_at", columnDefinition="TIMESTAMP NOT NULL")
 	//private LocalDateTime createdAt;
 	private Date createdAt;
 	

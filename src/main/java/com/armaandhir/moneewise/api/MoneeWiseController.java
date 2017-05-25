@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -45,6 +46,7 @@ public class MoneeWiseController {
 	 * @param description (optional)
 	 * @return
 	 */
+	@CrossOrigin
 	@RequestMapping(value="/moneewise/api/expense",
 			method=RequestMethod.POST,
 			consumes=MediaType.APPLICATION_FORM_URLENCODED_VALUE,
@@ -91,6 +93,7 @@ public class MoneeWiseController {
 	 * @param year
 	 * @return
 	 */
+	@CrossOrigin
 	@RequestMapping(value="/moneewise/api/expense/month",
 			method=RequestMethod.GET,
 			consumes=MediaType.APPLICATION_JSON_VALUE,
@@ -107,6 +110,7 @@ public class MoneeWiseController {
 	 * @param desc
 	 * @return
 	 */
+	@CrossOrigin
 	@RequestMapping(value="/moneewise/api/expense/description",
 			method=RequestMethod.POST,
 			consumes=MediaType.APPLICATION_FORM_URLENCODED_VALUE,
@@ -129,6 +133,7 @@ public class MoneeWiseController {
 	 * @param expenseId
 	 * @return
 	 */
+	@CrossOrigin
 	@RequestMapping(value="/moneewise/api/expense/desc/{expense_id}",
 			method=RequestMethod.GET,
 			consumes=MediaType.APPLICATION_JSON_VALUE,
