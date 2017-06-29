@@ -51,7 +51,7 @@ public class MoneeWiseController {
 			method=RequestMethod.POST,
 			consumes=MediaType.APPLICATION_FORM_URLENCODED_VALUE,
 			produces=MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<String> insertExpense (@RequestParam String stormpathEmail, @RequestParam String place,
+    public ResponseEntity<Expense> insertExpense (@RequestParam String stormpathEmail, @RequestParam String place,
     		@RequestParam BigDecimal amount, @RequestParam String currency, @RequestParam int categoryId,
     		@RequestParam(required=false) String description)
 	{
@@ -70,18 +70,18 @@ public class MoneeWiseController {
 				ExpenseDesc outExpenseDesc = expenseDescService.addDesc(inExpenseDesc);
 				if (outExpenseDesc != null)
 				{
-					return new ResponseEntity<String>("success", HttpStatus.OK);
+					return new ResponseEntity<Expense>(insertedExpense, HttpStatus.OK);
 				}
 				else 
 				{
-					return new ResponseEntity<String>("error", HttpStatus.INTERNAL_SERVER_ERROR);
+					return new ResponseEntity<Expense>(HttpStatus.INTERNAL_SERVER_ERROR);
 				}
 			}
-			return new ResponseEntity<String>("success", HttpStatus.OK);
+			return new ResponseEntity<Expense>(insertedExpense, HttpStatus.OK);
 		}
 		else
 		{
-			return new ResponseEntity<String>("error", HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<Expense>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
     }
 	
@@ -117,15 +117,21 @@ public class MoneeWiseController {
 			produces=MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<ExpenseDesc> insertDesc (@RequestParam Long expense_id, @RequestParam String description)
 	{
-		ExpenseDesc inExpenseDesc = new ExpenseDesc();
-		// Check for data before inserting
-		inExpenseDesc.setExpenseId(expense_id);
-		inExpenseDesc.setDescription(description);
-		ExpenseDesc outExpenseDesc = expenseDescService.addDesc(inExpenseDesc);
-		if (outExpenseDesc != null) {
-			return new ResponseEntity<ExpenseDesc> (outExpenseDesc, HttpStatus.OK);
+		if(expense_id != null && description != ""){
+			ExpenseDesc inExpenseDesc = new ExpenseDesc();
+			// Check for data before inserting
+			inExpenseDesc.setExpenseId(expense_id);
+			inExpenseDesc.setDescription(description);
+			ExpenseDesc outExpenseDesc = expenseDescService.addDesc(inExpenseDesc);
+			if (outExpenseDesc != null) {
+				return new ResponseEntity<ExpenseDesc> (outExpenseDesc, HttpStatus.OK);
+			}
+			return new ResponseEntity<ExpenseDesc> (HttpStatus.INTERNAL_SERVER_ERROR);
 		}
-		return new ResponseEntity<ExpenseDesc> (HttpStatus.INTERNAL_SERVER_ERROR);
+		else{
+			throw new IllegalArgumentException("invalid data");
+		}
+		
 	}
 	
 	/**
@@ -140,11 +146,16 @@ public class MoneeWiseController {
 			produces=MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<ExpenseDesc> getExpenseDesc (@PathVariable("expense_id") Long expenseId)
 	{
-		ExpenseDesc expenseDesc = expenseDescService.getDesc(expenseId);
-		if (expenseDesc.getExpenseId() != null) {
-			return new ResponseEntity<ExpenseDesc>(expenseDesc, HttpStatus.OK);
+		if(expenseId != null){
+			ExpenseDesc expenseDesc = expenseDescService.getDesc(expenseId);
+			if (expenseDesc.getExpenseId() != null) {
+				return new ResponseEntity<ExpenseDesc>(expenseDesc, HttpStatus.OK);
+			}
+			return new ResponseEntity<ExpenseDesc>(HttpStatus.NOT_FOUND);
 		}
-		return new ResponseEntity<ExpenseDesc>(HttpStatus.NOT_FOUND);
+		else{
+			throw new IllegalArgumentException("invalid data");
+		}
 	}
 	
 // end of class	
